@@ -1,0 +1,120 @@
+﻿@model MaestroDetalleCerveza.webapp.Models.ViewModels.CervezaViewModel
+
+@{
+    ViewData["Title"] = "CERVEZA";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div style="color:chartreuse">
+    @ViewData["Message"];
+</div>
+
+@using (Html.BeginForm("Add", "Cerveza", FormMethod.Post))
+{
+<div class="row">
+    <div class="form-group">
+        @Html.LabelFor(d => d.Nombre)
+        @Html.TextBoxFor(x => x.Nombre)
+    </div>
+    <div>
+        @Html.LabelFor(x => x.Estilo)
+        @Html.TextBoxFor(x => x.Estilo)
+    </div>
+
+
+    <hr />
+
+    <div class="form-group">
+        Nombre
+        <input type="text" id="NombreIngrediente" />
+        Gramos
+        <input type="number" id="Gramos" />
+        <input value="Agregar" type="button" onclick="AgregarIngrediente(); return false;" />
+    </div>
+
+    <br />
+
+    <div id="divIngredientes">
+        <table id="tablaIngredientes" style="width:100%;">
+            <tr>
+                <th>
+                    Nombre Ingrediente
+                </th>
+                <th>
+                    Gramos
+                </th>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <input type="submit" />
+    </div>
+
+</div>
+    
+}
+
+<script>
+    var num = 0;
+    function AgregarIngrediente() {
+        console.log("hola");
+        
+        let NombreIngrediente = document.getElementById("NombreIngrediente").value;
+        let Gramos = document.getElementById("Gramos").value;
+
+        // Se obtiene referencia a la tabla "tablaIngredientes"
+        let Tabla = document.getElementById("tablaIngredientes");
+       
+
+        // Se crea una nueva fila ("tr"). Luego, se agregará a la tabla refeenciada por "Tabla"
+        let TR = document.createElement("tr");
+
+        // Se crean las nuevas columnas de datos con valores ("td")
+        let TDNombreIngrediente = document.createElement("td");
+        let TDGramos = document.createElement("td");
+
+        // Se agregan las nuevas columnas de datos con valores, a la fila recién creada
+        TR.appendChild(TDNombreIngrediente);
+        TR.appendChild(TDGramos);
+
+        TDNombreIngrediente.innerHTML = NombreIngrediente;
+        TDGramos.innerHTML = Gramos;
+        
+        //TDTotal.innerHTML = parseFloat(Cantidad) * parseFloat(PrecioUnitario);
+
+        // Se agrega la nueva fila, a la referencia a la tabla
+        Tabla.appendChild(TR);
+
+        // Se agregan "hiddens"
+        // Nota es importante que si, en la clase "CervezaViewModel", el "List" se llama "ingredientes" con minúsculas; aquí, debe ser 
+        // con minúsculas. Lo mismo para "Nombre" y "Gramos". Es "Case Sensitive", se deben respetar mayúsculas y minúsculas.
+        let DivIngredientes = document.getElementById("divIngredientes");
+
+        let HiddenIndex = document.createElement("input");
+        let HiddenNombreIngrediente = document.createElement("input");
+        let HiddenGramos = document.createElement("input");
+
+        HiddenIndex.name = "ingredientes.Index";
+        HiddenIndex.value = num;
+        HiddenIndex.type = "hidden";
+
+        HiddenNombreIngrediente.name = "ingredientes[" + num + "].NombreIngrediente";
+        HiddenNombreIngrediente.value = NombreIngrediente;
+        HiddenNombreIngrediente.type = "hidden";
+
+        HiddenGramos.name = "ingredientes[" + num + "].Gramos";
+        HiddenGramos.value = Gramos;
+        HiddenGramos.type = "hidden";
+
+
+        // Se agregan los 'hidden" al "div"
+        DivIngredientes.appendChild(HiddenIndex);
+        DivIngredientes.appendChild(HiddenNombreIngrediente);
+        DivIngredientes.appendChild(HiddenGramos);
+
+        // Se incrementa el puntero (contador), para la siguiente vez que se invoque a esta función "JavaScript"
+        ++num;
+    }
+</script>
