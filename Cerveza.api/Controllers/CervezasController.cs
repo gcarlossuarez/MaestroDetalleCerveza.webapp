@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Cerveza.api.Models;
-using SQLitePCL;
-using System.Security.Cryptography.X509Certificates;
+
 
 namespace Cerveza.api.Controllers
 {
@@ -131,6 +130,27 @@ namespace Cerveza.api.Controllers
                 _context.Update(cerveza);
 
 
+                //await _context.SaveChangesAsync();
+
+                _context.SaveChanges();
+
+                //var l_ListadoFaltantes = (from s in _context.Ingrediente
+                //                         where !cerveza.Ingrediente.Any( es => (es.Id == s.Id) )
+                //                         select s).AsEnumerable();
+                //foreach (var l_IngredienteEstabaEnListadoOriginal in l_ListadoFaltantes)
+                //{
+                //    _context.Ingrediente.Remove(l_IngredienteEstabaEnListadoOriginal);
+                //}
+                List<int> l_ListIds = cerveza.Ingrediente.Select(x => x.Id).ToList();
+                var l_ListadoFaltantes = _context.Ingrediente.Where(x=> x.IdCerveza == cerveza.Id);
+                foreach (var l_IngredienteEstabaEnListadoOriginal in l_ListadoFaltantes)
+                {
+                    if(l_ListIds.Where(x=> x == l_IngredienteEstabaEnListadoOriginal.Id).Count() == 0)
+                    {
+                        _context.Ingrediente.Remove(l_IngredienteEstabaEnListadoOriginal);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
 
                 //foreach(var l_IdYaNoEstá in l_ListIdsYaNoEstán)
@@ -140,9 +160,9 @@ namespace Cerveza.api.Controllers
                 //    {
                 //        _context.Ingrediente.Remove(l_IngredienteYaNoEstá);
                 //    }
-                    
+
                 //}
-                
+
                 //await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
