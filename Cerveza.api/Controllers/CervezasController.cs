@@ -127,6 +127,7 @@ namespace Cerveza.api.Controllers
 
                 //_context.Entry(cerveza).State = EntityState.Modified;
 
+
                 _context.Update(cerveza);
 
 
@@ -142,13 +143,21 @@ namespace Cerveza.api.Controllers
                 //    _context.Ingrediente.Remove(l_IngredienteEstabaEnListadoOriginal);
                 //}
                 List<int> l_ListIds = cerveza.Ingrediente.Select(x => x.Id).ToList();
-                var l_ListadoFaltantes = _context.Ingrediente.Where(x=> x.IdCerveza == cerveza.Id);
-                foreach (var l_IngredienteEstabaEnListadoOriginal in l_ListadoFaltantes)
+                var l_ListadoActualMasAnterior = _context.Ingrediente.Where(x=> x.IdCerveza == cerveza.Id);
+                foreach (var l_IngredienteEstabaEnListadoOriginal in l_ListadoActualMasAnterior)
                 {
                     if(l_ListIds.Where(x=> x == l_IngredienteEstabaEnListadoOriginal.Id).Count() == 0)
                     {
                         _context.Ingrediente.Remove(l_IngredienteEstabaEnListadoOriginal);
                     }
+                }
+
+                _context.SaveChanges();
+                int l_NroDetalles = _context.Ingrediente.Where(x => x.IdCerveza == cerveza.Id).Count();
+                if (l_NroDetalles == 0)
+                {
+                    // Si ya no tiene detalles
+                    _context.Cerveza.Remove(cerveza);
                 }
 
                 await _context.SaveChangesAsync();
@@ -200,6 +209,11 @@ namespace Cerveza.api.Controllers
             if (cerveza == null)
             {
                 return NotFound();
+            }
+
+            foreach(var l_Ingrediente in _context.Ingrediente.Where(x=> x.IdCerveza == id))
+            {
+                _context.Ingrediente.Remove(l_Ingrediente);
             }
 
             _context.Cerveza.Remove(cerveza);

@@ -1,0 +1,99 @@
+﻿@model MaestroDetalleCerveza.webapp.Models.ViewModels.CervezaEditViewModel
+
+@{
+    ViewData["Title"] = "BORRAR CERVEZA";
+}
+
+@*@{
+        var l_CervezaEditViewModel = Model;
+    }*@
+<h1>@ViewData["Title"]</h1>
+
+
+<div style="color:chartreuse">
+    @ViewBag.Message;
+</div>
+
+@*<div>
+        <a asp-action="Index">Volver al listado de cervezas</a>
+    </div>*@
+
+<input type="button" value="Volver al listado de cervezas" onclick="location.href='@Url.Action("Index", "Cerveza")'" />
+
+@using (Html.BeginForm("Delete", "Cerveza", FormMethod.Post))
+{
+    <div class="row">
+        <div class="form-group">
+            @Html.LabelFor(d => d.IdCerveza)
+            @Html.TextBoxFor(x => x.IdCerveza, new { @readonly = true })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(d => d.Nombre)
+            @Html.TextBoxFor(x => x.Nombre, new { @readonly = true })
+        </div>
+        <div>
+            @Html.LabelFor(x => x.Estilo)
+            @Html.TextBoxFor(x => x.Estilo, new { @readonly = true })
+        </div>
+
+
+        <hr />
+
+        @*<div class="form-group">
+            Id
+            <input type="number" id="IdIngrediente" readonly />
+            Nombre
+            <input type="text" id="NombreIngrediente" readonly />
+            Gramos
+            <input type="number" id="Gramos" readonly />
+        </div>*@
+
+        <br />
+
+
+        <a id="numIngredientes">@Model.ingredientes.Count</a>
+
+        <br />
+        <div id="divIngredientes">
+            <table id="tablaIngredientes" style="width:100%;">
+                <tr>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Nombre Ingrediente
+                    </th>
+                    <th>
+                        Gramos
+                    </th>
+                </tr>
+
+            </table>
+
+            @{
+                int contador = 0;
+            }
+            @foreach (var l_Ítem in Model.ingredientes)
+            {
+                <input type="hidden" name="ingredientes.Index" id="ingredientes.Index" value="@contador" />
+                <input name="ingredientes[@contador].IdIngrediente" id="ingredientes[@contador].IdIngrediente"
+                       value="@l_Ítem.IdIngrediente" readonly />
+                <input name="ingredientes[@contador].NombreIngrediente" id="ingredientes[@contador].NombreIngrediente"
+                       value="@l_Ítem.NombreIngrediente" readonly />
+                <input name="ingredientes[@contador].Gramos" id="ingredientes[@contador].Gramos"
+                       value="@l_Ítem.Gramos" readonly />
+                <br />
+
+                ++@contador;
+            }
+
+
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="@Model.IdCerveza" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </form>
+    </div>
+
+}

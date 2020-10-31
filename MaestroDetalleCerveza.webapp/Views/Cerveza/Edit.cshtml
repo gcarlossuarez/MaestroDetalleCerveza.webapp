@@ -10,7 +10,7 @@
 <h1>@ViewData["Title"]</h1>
 
 <div style="color:chartreuse">
-    @ViewData["Message"];
+    @ViewBag.Message;
 </div>
 
 @*<div>
@@ -24,7 +24,7 @@
     <div class="row">
         <div class="form-group">
             @Html.LabelFor(d => d.IdCerveza)
-            @Html.TextBoxFor(x => x.IdCerveza)
+            @Html.TextBoxFor(x => x.IdCerveza, new { @readonly = true })
         </div>
         <div class="form-group">
             @Html.LabelFor(d => d.Nombre)
@@ -40,7 +40,7 @@
 
         <div class="form-group">
             Id
-            <input type="number" id="IdIngrediente" />
+            <input type="number" id="IdIngrediente" readonly/>
             Nombre
             <input type="text" id="NombreIngrediente" />
             Gramos
@@ -109,7 +109,7 @@
                            value="@l_Ítem.Gramos" />*@
                 <input type="hidden" name="ingredientes.Index" id="ingredientes.Index" value="@contador" />
                 <input name="ingredientes[@contador].IdIngrediente" id="ingredientes[@contador].IdIngrediente"
-                       value="@l_Ítem.IdIngrediente" ; />
+                       value="@l_Ítem.IdIngrediente" readonly />
                 <input name="ingredientes[@contador].NombreIngrediente" id="ingredientes[@contador].NombreIngrediente"
                        value="@l_Ítem.NombreIngrediente" />
                 <input name="ingredientes[@contador].Gramos" id="ingredientes[@contador].Gramos"
@@ -164,7 +164,7 @@
         TR.appendChild(TDNombreIngrediente);
         TR.appendChild(TDGramos);
 
-        TDIdIngrediente.innerHTML = 0;
+        TDIdIngrediente.innerHTML = 0
         TDNombreIngrediente.innerHTML = NombreIngrediente;
         TDGramos.innerHTML = Gramos;
 
@@ -179,6 +179,7 @@
         let DivIngredientes = document.getElementById("divIngredientes");
 
         let HiddenIndex = document.createElement("input");
+        let HiddenIdIngrediente = document.createElement("input");
         let HiddenNombreIngrediente = document.createElement("input");
         let HiddenGramos = document.createElement("input");
 
@@ -186,9 +187,9 @@
         HiddenIndex.value = siguienteNum;
         HiddenIndex.type = "hidden";
 
-        HiddenNombreIngrediente.name = "ingredientes[" + siguienteNum + "].IdIngrediente";
-        HiddenNombreIngrediente.value = 0;
-        HiddenNombreIngrediente.type = "hidden";
+        HiddenIdIngrediente.name = "ingredientes[" + siguienteNum + "].IdIngrediente";
+        HiddenIdIngrediente.value = 0;
+        HiddenIdIngrediente.type = "hidden";
 
         HiddenNombreIngrediente.name = "ingredientes[" + siguienteNum + "].NombreIngrediente";
         HiddenNombreIngrediente.value = NombreIngrediente;
@@ -201,6 +202,7 @@
 
         // Se agregan los 'hidden" al "div"
         DivIngredientes.appendChild(HiddenIndex);
+        DivIngredientes.appendChild(HiddenIdIngrediente);
         DivIngredientes.appendChild(HiddenNombreIngrediente);
         DivIngredientes.appendChild(HiddenGramos);
 

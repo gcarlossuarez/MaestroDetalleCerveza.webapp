@@ -103,6 +103,7 @@ namespace MaestroDetalleCerveza.webapp.Controllers
                 {
                     try
                     {
+                        ViewBag.Message = "";
 
                         Cerveza.api.Controllers.CervezasController l_CervezasController =
                                                         new Cerveza.api.Controllers.CervezasController(DB);
@@ -118,16 +119,22 @@ namespace MaestroDetalleCerveza.webapp.Controllers
                         await l_CervezasController.PostCerveza(l_CervezaWebApi);
 
                         l_Transacción.Commit();
+
+                        ViewBag.Message = "Creación exitosa";
                     }
                     catch (Exception ex)
                     {
+                        ViewBag.Message = "Ocurrió el error:" + ex.Message;
+
                         l_Transacción.Rollback();
                     }
 
                 }
 
-                return View(nameof(Create));
-
+                return View("Create", new CervezaViewModel());
+                //return View(nameof(Create));
+                //return View(nameof(Index));
+                //return await this.Index();
             }
         }
 
@@ -162,7 +169,7 @@ namespace MaestroDetalleCerveza.webapp.Controllers
         }
 
         [HttpGet]
-        // GET: Products/Edit/5
+        // GET: Cerveza/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             //if (id == null)
@@ -179,6 +186,8 @@ namespace MaestroDetalleCerveza.webapp.Controllers
                 {
                     try
                     {
+                        ViewBag.Message = "";
+
                         Cerveza.api.Controllers.CervezasController l_CervezasController =
                                                        new Cerveza.api.Controllers.CervezasController(DB);
 
@@ -186,11 +195,21 @@ namespace MaestroDetalleCerveza.webapp.Controllers
                         ActionResult<Cerveza.api.Models.Cerveza> actionResult = await l_CervezasController.GetCerveza(l_IdCerveza);
                         Cerveza.api.Models.Cerveza l_CervezaWebApi = actionResult.Value;
                         
-                        return View( TransformarCervezaEnCervezaEditViewModel( l_CervezaWebApi, DB, true) );
+                        if(null != l_CervezaWebApi)
+                        {
+                            return View(TransformarCervezaEnCervezaEditViewModel(l_CervezaWebApi, DB, true));
+                        }
+                        else
+                        {
+                            return View( new CervezaEditViewModel() );
+                        }
+                        
                     }
                     catch (Exception ex)
                     {
                         l_Transacción.Rollback();
+
+                        ViewBag.Message = "Ocurrió el error:" + ex.Message;
 
                         return View("Error", "Models");
                     }
@@ -202,7 +221,7 @@ namespace MaestroDetalleCerveza.webapp.Controllers
         }
 
         [HttpPost]
-        // POST: Products/Edit/5
+        // POST: Cerveza/Edit/5
         public async Task<IActionResult> Edit(int? id, CervezaEditViewModel p_CervezaViewEditModel)
         {
             //if (id == null)
@@ -219,6 +238,8 @@ namespace MaestroDetalleCerveza.webapp.Controllers
                 {
                     try
                     {
+                        ViewBag.Message = "";
+
                         Cerveza.api.Controllers.CervezasController l_CervezasController =
                                                         new Cerveza.api.Controllers.CervezasController(DB);
                         Cerveza.api.Models.Cerveza l_CervezaWebApi = new Cerveza.api.Models.Cerveza
@@ -250,8 +271,10 @@ namespace MaestroDetalleCerveza.webapp.Controllers
 
                         l_Transacción.Commit();
 
-                        return await Edit(p_CervezaViewEditModel.IdCerveza);
-                        //return View(p_CervezaViewEditModel);
+                        ViewBag.Message = "Modificación exitosa";
+
+                        //return await Edit(p_CervezaViewEditModel.IdCerveza);
+                        return View(p_CervezaViewEditModel);
                         //return View(new CervezaEditViewModel());
                         //return View();
                         //return View(nameof(Index));
@@ -260,13 +283,68 @@ namespace MaestroDetalleCerveza.webapp.Controllers
                     {
                         l_Transacción.Rollback();
 
-                        return View("Error", "Models");
+                        ViewBag.Message = "Ocurrió el error:" + ex.Message;
+
+                        return await Edit(p_CervezaViewEditModel.IdCerveza);
+                        //return View("Error", "Models");
                     }
 
                 }
                 //return View(await DB.Cerveza.ToListAsync()); //.ToListAsync());
             }
 
+        }
+
+        [HttpGet]
+        // GET: Cerveza/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            return await Edit(id);
+        }
+
+        
+        // GET: Cerveza/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int ? id)
+        {
+            int l_IdCerveza = id ?? 0;
+
+            using (var DB = new Cerveza.api.Models.MaestroDetalleContext())
+            {
+                using (var l_Transacción = DB.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        ViewBag.Message = "";
+
+                        Cerveza.api.Controllers.CervezasController l_CervezasController =
+                                                        new Cerveza.api.Controllers.CervezasController(DB);
+                        await l_CervezasController.DeleteCerveza(l_IdCerveza);
+
+                        l_Transacción.Commit();
+
+                        ViewBag.Message = "Eliminación exitosa";
+
+                        //return await Edit(l_IdCerveza);
+                        return View( new CervezaEditViewModel());
+                        //return View(new CervezaEditViewModel());
+                        //return View();
+                        //return View(nameof(Index));
+                    }
+                    catch (Exception ex)
+                    {
+                        l_Transacción.Rollback();
+
+                        ViewBag.Message = "Ocurrió el error:" + ex.Message;
+
+                        return View(new CervezaEditViewModel());
+                        //return View("Error", "Models");
+                    }
+
+                }
+                //return View(await DB.Cerveza.ToListAsync()); //.ToListAsync());
+            }
         }
     }
 }
