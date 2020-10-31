@@ -52,7 +52,7 @@ namespace MaestroDetalleCerveza.webapp.Controllers
         {
             CervezaEditViewModel l_CervezaEditViewModel = new CervezaEditViewModel()
             {
-                Id = p_Cerveza.Id,
+                IdCerveza = p_Cerveza.Id,
                 Estilo = p_Cerveza.Estilo,
                 Nombre = p_Cerveza.Nombre
             };
@@ -74,7 +74,7 @@ namespace MaestroDetalleCerveza.webapp.Controllers
             {
                 IngredienteEditViewModel l_IngredienteEditViewModel = new IngredienteEditViewModel
                 {
-                    Id = l_IngerienteModelDB.Id,
+                    IdIngrediente = l_IngerienteModelDB.Id,
                     NombreIngrediente = l_IngerienteModelDB.Nombre,
                     Gramos = l_IngerienteModelDB.Gramos,
                     IdCerveza = l_IngerienteModelDB.IdCerveza
@@ -111,16 +111,7 @@ namespace MaestroDetalleCerveza.webapp.Controllers
                             Nombre = model.Nombre,
                             Estilo = model.Estilo
                         };
-
-                        List<Cerveza.api.Models.Ingrediente> l_ListIngredientesWebApi = new List<Cerveza.api.Models.Ingrediente>();
-                        foreach (var l_IngredienteViewModel in model.ingredientes)
-                        {
-                            Cerveza.api.Models.Ingrediente l_IngredienteWebApi = new Cerveza.api.Models.Ingrediente();
-                            l_IngredienteWebApi.Nombre = l_IngredienteViewModel.NombreIngrediente;
-                            l_IngredienteWebApi.Gramos = l_IngredienteViewModel.Gramos;
-
-                            l_ListIngredientesWebApi.Add(l_IngredienteWebApi);
-                        }
+                        List<Cerveza.api.Models.Ingrediente> l_ListIngredientesWebApi = ObtIngredientesCervezaDesdeWebApi(model);
 
                         l_CervezaWebApi.Ingrediente = l_ListIngredientesWebApi;
 
@@ -138,6 +129,140 @@ namespace MaestroDetalleCerveza.webapp.Controllers
                 return View(nameof(Create));
 
             }
+        }
+
+        private static List<Cerveza.api.Models.Ingrediente> ObtIngredientesCervezaDesdeWebApi(CervezaViewModel model)
+        {
+            List<Cerveza.api.Models.Ingrediente> l_ListIngredientesWebApi = new List<Cerveza.api.Models.Ingrediente>();
+            foreach (var l_IngredienteViewModel in model.ingredientes)
+            {
+                Cerveza.api.Models.Ingrediente l_IngredienteWebApi = new Cerveza.api.Models.Ingrediente();
+                l_IngredienteWebApi.Nombre = l_IngredienteViewModel.NombreIngrediente;
+                l_IngredienteWebApi.Gramos = l_IngredienteViewModel.Gramos;
+
+                l_ListIngredientesWebApi.Add(l_IngredienteWebApi);
+            }
+
+            return l_ListIngredientesWebApi;
+        }
+
+        private static List<Cerveza.api.Models.Ingrediente> ObtIngredientesCervezaDesdeWebApi(CervezaEditViewModel model)
+        {
+            List<Cerveza.api.Models.Ingrediente> l_ListIngredientesWebApi = new List<Cerveza.api.Models.Ingrediente>();
+            foreach (var l_IngredienteViewModel in model.ingredientes)
+            {
+                Cerveza.api.Models.Ingrediente l_IngredienteWebApi = new Cerveza.api.Models.Ingrediente();
+                l_IngredienteWebApi.Nombre = l_IngredienteViewModel.NombreIngrediente;
+                l_IngredienteWebApi.Gramos = l_IngredienteViewModel.Gramos;
+
+                l_ListIngredientesWebApi.Add(l_IngredienteWebApi);
+            }
+
+            return l_ListIngredientesWebApi;
+        }
+
+        [HttpGet]
+        // GET: Products/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
+            
+            int l_IdCerveza = id ?? 0;
+
+
+            using (var DB = new Cerveza.api.Models.MaestroDetalleContext())
+            {
+                using (var l_Transacción = DB.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        Cerveza.api.Controllers.CervezasController l_CervezasController =
+                                                       new Cerveza.api.Controllers.CervezasController(DB);
+
+
+                        ActionResult<Cerveza.api.Models.Cerveza> actionResult = await l_CervezasController.GetCerveza(l_IdCerveza);
+                        Cerveza.api.Models.Cerveza l_CervezaWebApi = actionResult.Value;
+                        
+                        return View( TransformarCervezaEnCervezaEditViewModel( l_CervezaWebApi, DB, true) );
+                    }
+                    catch (Exception ex)
+                    {
+                        l_Transacción.Rollback();
+
+                        return View("Error", "Models");
+                    }
+
+                }
+                //return View(await DB.Cerveza.ToListAsync()); //.ToListAsync());
+            }
+
+        }
+
+        [HttpPost]
+        // POST: Products/Edit/5
+        public async Task<IActionResult> Edit(int? id, CervezaEditViewModel p_CervezaViewEditModel)
+        {
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
+
+            int l_IdCerveza = id ?? 0;
+
+
+            using (var DB = new Cerveza.api.Models.MaestroDetalleContext())
+            {
+                using (var l_Transacción = DB.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        Cerveza.api.Controllers.CervezasController l_CervezasController =
+                                                        new Cerveza.api.Controllers.CervezasController(DB);
+                        Cerveza.api.Models.Cerveza l_CervezaWebApi = new Cerveza.api.Models.Cerveza
+                        {
+                            Id = p_CervezaViewEditModel.IdCerveza,
+                            Nombre = p_CervezaViewEditModel.Nombre,
+                            Estilo = p_CervezaViewEditModel.Estilo
+                        };
+
+                        l_CervezaWebApi.Ingrediente = new List<Cerveza.api.Models.Ingrediente>();
+
+                        foreach(var l_ÍtemViewEditModel in p_CervezaViewEditModel.ingredientes)
+                        {
+                            if(!string.IsNullOrEmpty(l_ÍtemViewEditModel.NombreIngrediente))
+                            {
+                                Cerveza.api.Models.Ingrediente l_IngredienteWebApi = new Cerveza.api.Models.Ingrediente()
+                                {
+                                    Id = l_ÍtemViewEditModel.IdIngrediente,
+                                    Nombre = l_ÍtemViewEditModel.NombreIngrediente,
+                                    Gramos = l_ÍtemViewEditModel.Gramos,
+                                    IdCerveza = l_CervezaWebApi.Id, //l_ÍtemViewEditModel.IdCerveza
+                                    IdCervezaNavigation = l_CervezaWebApi
+                                };
+                                l_CervezaWebApi.Ingrediente.Add(l_IngredienteWebApi);
+                            }
+                        }
+
+                        await l_CervezasController.PutCerveza(l_IdCerveza, l_CervezaWebApi);
+
+                        l_Transacción.Commit();
+
+                        return View(); // nameof(Index));
+                    }
+                    catch (Exception ex)
+                    {
+                        l_Transacción.Rollback();
+
+                        return View("Error", "Models");
+                    }
+
+                }
+                //return View(await DB.Cerveza.ToListAsync()); //.ToListAsync());
+            }
+
         }
     }
 }

@@ -7,7 +7,7 @@ namespace MaestroDetalleCerveza.webapp.Models.ViewModels
 {
     public class CervezaEditViewModel
     {
-        public int Id {get; set;}
+        public int IdCerveza {get; set;}
         public string Nombre { get; set; }
         public string Estilo { get; set; }
 
@@ -16,7 +16,7 @@ namespace MaestroDetalleCerveza.webapp.Models.ViewModels
 
     public class IngredienteEditViewModel
     {
-        public int Id { get; set; }
+        public int IdIngrediente { get; set; }
         public string NombreIngrediente { get; set; }
         public int Gramos { get; set; }
 

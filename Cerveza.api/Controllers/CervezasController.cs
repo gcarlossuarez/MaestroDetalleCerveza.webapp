@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Cerveza.api.Models;
+using SQLitePCL;
 
 namespace Cerveza.api.Controllers
 {
@@ -53,11 +54,59 @@ namespace Cerveza.api.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(cerveza).State = EntityState.Modified;
+            //var l_Cerveza = _context.Cerveza.Find(cerveza);
+            //l_Cerveza.Ingrediente = cerveza.Ingrediente;
+            //var l_Cerveza = _context.Cerveza.Where(x => x.Id == cerveza.Id).FirstOrDefault();
+            //if(l_Cerveza != null)
+            //{
+            //    l_Cerveza = cerveza;
+            //}
 
+            //_context.Entry(cerveza).State = EntityState.Modified;
+            
             try
             {
+                //// Se cargan los nuevos
+                //foreach (var l_Ingrediente in cerveza.Ingrediente.Where(x=> x.Id == 0))
+                //{
+                //    //if (l_Ingrediente.Id == 0)
+                //    {
+                //        // Es nuevo
+                //        _context.Ingrediente.Add(l_Ingrediente);
+
+                //    }
+                //}
+
+                //_context.SaveChanges();
+
+                //List<int> l_ListIdsYaNoEstán = new List<int>();
+
+                //foreach (var l_IngredienteEstabaEnListadoOriginal in _context.Ingrediente.Where(x => x.IdCerveza == cerveza.Id))
+                //{
+                //    //Ingrediente l_IngredienteParámetro = cerveza.Ingrediente.Where(x => x.Id == l_IngredienteEstabaEnListadoOriginal.Id).FirstOrDefault();
+
+                //    if (cerveza.Ingrediente.Where(x => (x.Id == l_IngredienteEstabaEnListadoOriginal.Id) && (x.Id != 0)).Count() == 0)
+                //    {
+                //        // Se borran los que ya no están
+                //        l_ListIdsYaNoEstán.Add(l_IngredienteEstabaEnListadoOriginal.Id);
+                //    }
+                //}
+
+                _context.Update(cerveza);
+
                 await _context.SaveChangesAsync();
+
+                //foreach(var l_IdYaNoEstá in l_ListIdsYaNoEstán)
+                //{
+                //    Ingrediente l_IngredienteYaNoEstá = cerveza.Ingrediente.Where(x => x.Id == l_IdYaNoEstá).FirstOrDefault();
+                //    if(null != l_IngredienteYaNoEstá)
+                //    {
+                //        _context.Ingrediente.Remove(l_IngredienteYaNoEstá);
+                //    }
+                    
+                //}
+                
+                //await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -71,7 +120,7 @@ namespace Cerveza.api.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(); // NoContent();
         }
 
         // POST: api/Cervezas
