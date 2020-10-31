@@ -174,3 +174,4 @@ C:\Users\German Suarez\source\repos\WebMaestroDetalleCerveza\MaestroDetalleCerve
 C:\Users\German Suarez\source\repos\WebMaestroDetalleCerveza\MaestroDetalleCerveza.webapp\bin\Debug\netcoreapp3.1\Cerveza.api.dll
 C:\Users\German Suarez\source\repos\WebMaestroDetalleCerveza\MaestroDetalleCerveza.webapp\bin\Debug\netcoreapp3.1\Cerveza.api.pdb
 C:\Users\German Suarez\source\repos\WebMaestroDetalleCerveza\MaestroDetalleCerveza.webapp\obj\Debug\netcoreapp3.1\MaestroDetalleCerveza.webapp.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\German Suarez\source\repos\WebMaestroDetalleCerveza\MaestroDetalleCerveza.webapp\obj\Debug\netcoreapp3.1\Razor\Views\Cerveza\Index.cshtml.g.cs
