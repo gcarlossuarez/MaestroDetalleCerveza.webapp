@@ -11,7 +11,7 @@ namespace MaestroDetalleCerveza.webapp.Models.ViewModels
         public string Nombre { get; set; }
         public string Estilo { get; set; }
 
-        public List<IngredienteEditViewModel> ingredientes { get; set; }
+        public List<IngredienteEditViewModel> ingredientes { get; set; } = new List<IngredienteEditViewModel>();
     }
 
     public class IngredienteEditViewModel

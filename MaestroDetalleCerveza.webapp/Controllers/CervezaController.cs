@@ -22,8 +22,8 @@ namespace MaestroDetalleCerveza.webapp.Controllers
                     try
                     {
                         // Para no hacerlo muy pesado, no se carga el detalle; se cargará por demanda
-                        //var l_ListCerveza = 
-                        //    await DB.Cerveza.Select(x=> 
+                        //var l_ListCerveza =
+                        //    await DB.Cerveza.Select(x =>
                         //       CervezaController.TransformarCervezaEnCervezaEditViewModel(x, DB, true)).ToListAsync();
                         var l_ListCerveza =
                             await DB.Cerveza.Select(x =>
@@ -69,7 +69,7 @@ namespace MaestroDetalleCerveza.webapp.Controllers
                     l_ListIngredientes = DB.Ingrediente.Where(x => x.IdCerveza == p_Cerveza.Id).ToList();
                 }
             }
-            l_CervezaEditViewModel.ingredientes = new List<IngredienteEditViewModel>();
+            
             foreach (var l_IngerienteModelDB in l_ListIngredientes)
             {
                 IngredienteEditViewModel l_IngredienteEditViewModel = new IngredienteEditViewModel
@@ -250,7 +250,11 @@ namespace MaestroDetalleCerveza.webapp.Controllers
 
                         l_Transacción.Commit();
 
-                        return View(); // nameof(Index));
+                        return await Edit(p_CervezaViewEditModel.IdCerveza);
+                        //return View(p_CervezaViewEditModel);
+                        //return View(new CervezaEditViewModel());
+                        //return View();
+                        //return View(nameof(Index));
                     }
                     catch (Exception ex)
                     {

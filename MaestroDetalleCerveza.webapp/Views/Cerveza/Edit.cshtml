@@ -4,121 +4,138 @@
     ViewData["Title"] = "EDITAR CERVEZA";
 }
 
-@*@{ 
-    var l_CervezaEditViewModel = Model;
-}*@
+@*@{
+        var l_CervezaEditViewModel = Model;
+    }*@
 <h1>@ViewData["Title"]</h1>
 
 <div style="color:chartreuse">
     @ViewData["Message"];
 </div>
 
+@*<div>
+    <a asp-action="Index">Volver al listado de cervezas</a>
+</div>*@
+
+<input type="button" value="Volver al listado de cervezas" onclick="location.href='@Url.Action("Index", "Cerveza")'" />
+
 @using (Html.BeginForm("Edit", "Cerveza", FormMethod.Post))
 {
-<div class="row">
-    <div class="form-group">
-        @Html.LabelFor(d => d.IdCerveza)
-        @Html.TextBoxFor(x => x.IdCerveza)
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(d => d.Nombre)
-        @Html.TextBoxFor(x => x.Nombre)
-    </div>
-    <div>
-        @Html.LabelFor(x => x.Estilo)
-        @Html.TextBoxFor(x => x.Estilo)
-    </div>
+    <div class="row">
+        <div class="form-group">
+            @Html.LabelFor(d => d.IdCerveza)
+            @Html.TextBoxFor(x => x.IdCerveza)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(d => d.Nombre)
+            @Html.TextBoxFor(x => x.Nombre)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.Estilo)
+            @Html.TextBoxFor(x => x.Estilo)
+        </div>
 
 
-    <hr />
+        <hr />
 
-    <div class="form-group">
-        Id
-        <input type="number" id="IdIngrediente" />
-        Nombre
-        <input type="text" id="NombreIngrediente" />
-        Gramos
-        <input type="number" id="Gramos" />
-        <input value="Agregar" type="button" onclick="AgregarIngrediente(); return false;" />
-    </div>
+        <div class="form-group">
+            Id
+            <input type="number" id="IdIngrediente" />
+            Nombre
+            <input type="text" id="NombreIngrediente" />
+            Gramos
+            <input type="number" id="Gramos" />
+            <input value="Agregar" type="button" onclick="AgregarIngrediente(); return false;" />
+        </div>
 
-    <br />
+        <br />
 
-    <a id="numIngredientes">@Model.ingredientes.Count</a>
-    <br />
-    <div id="divIngredientes">
-        <table id="tablaIngredientes" style="width:100%;">
-            <tr>
-                <th>
-                    Id
-                </th>
-                <th>
-                    Nombre Ingrediente
-                </th>
-                <th>
-                    Gramos
-                </th>
-            </tr>
 
-            @*@foreach (var l_Ítem in Model.ingredientes)
-            {
-                <tr>
-                    <td>
-                        @Html.TextBoxFor(d => l_Ítem.IdIngrediente)
-                    </td>
-                    <td>
-                        @Html.TextBoxFor(d => l_Ítem.NombreIngrediente)
-                    </td>
-                    <td>
-                        @Html.TextBoxFor(d => l_Ítem.Gramos)
-                    </td>
-
-                </tr>
+        @*@{
+                    if (@Model != null)
+                    {
+                        if (@Model.ingredientes != null)
+                        {
+                            <a id="numIngredientes">@Model.ingredientes.Count</a>
+                        }
+                    }
             }*@
-        </table>
 
-        @{
-            int contador = 0;
-        }
-        @foreach (var l_Ítem in Model.ingredientes)
-        {
-            @*<input type="hidden" name="ingredientes.Index" id="ingredientes.Index" value="@contador" />
-            <input type="hidden" name="ingredientes[@contador].IdIngrediente" id="ingredientes[@contador].IdIngrediente"
-                   value="0"; />
-            <input type="hidden" name="ingredientes[@contador].NombreIngrediente" id="ingredientes[@contador].NombreIngrediente"
-                   value="@l_Ítem.NombreIngrediente" />
-            <input type="hidden" name="ingredientes[@contador].Gramos" id="ingredientes[@contador].Gramos"
-                   value="@l_Ítem.Gramos" />*@
-            <input type="hidden" name="ingredientes.Index" id="ingredientes.Index" value="@contador" />
-            <input name="ingredientes[@contador].IdIngrediente" id="ingredientes[@contador].IdIngrediente"
-                   value="@l_Ítem.IdIngrediente" ; />
-            <input name="ingredientes[@contador].NombreIngrediente" id="ingredientes[@contador].NombreIngrediente"
-                   value="@l_Ítem.NombreIngrediente" />
-            <input name="ingredientes[@contador].Gramos" id="ingredientes[@contador].Gramos"
-                   value="@l_Ítem.Gramos" />
-            <br />
+        <a id="numIngredientes">@Model.ingredientes.Count</a>
 
-            ++@contador;
-        }
+        <br />
+        <div id="divIngredientes">
+            <table id="tablaIngredientes" style="width:100%;">
+                <tr>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Nombre Ingrediente
+                    </th>
+                    <th>
+                        Gramos
+                    </th>
+                </tr>
+
+                @*@foreach (var l_Ítem in Model.ingredientes)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBoxFor(d => l_Ítem.IdIngrediente)
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(d => l_Ítem.NombreIngrediente)
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(d => l_Ítem.Gramos)
+                            </td>
+
+                        </tr>
+                    }*@
+            </table>
+
+            @{
+                int contador = 0;
+            }
+            @foreach (var l_Ítem in Model.ingredientes)
+            {
+                @*<input type="hidden" name="ingredientes.Index" id="ingredientes.Index" value="@contador" />
+                    <input type="hidden" name="ingredientes[@contador].IdIngrediente" id="ingredientes[@contador].IdIngrediente"
+                           value="0"; />
+                    <input type="hidden" name="ingredientes[@contador].NombreIngrediente" id="ingredientes[@contador].NombreIngrediente"
+                           value="@l_Ítem.NombreIngrediente" />
+                    <input type="hidden" name="ingredientes[@contador].Gramos" id="ingredientes[@contador].Gramos"
+                           value="@l_Ítem.Gramos" />*@
+                <input type="hidden" name="ingredientes.Index" id="ingredientes.Index" value="@contador" />
+                <input name="ingredientes[@contador].IdIngrediente" id="ingredientes[@contador].IdIngrediente"
+                       value="@l_Ítem.IdIngrediente" ; />
+                <input name="ingredientes[@contador].NombreIngrediente" id="ingredientes[@contador].NombreIngrediente"
+                       value="@l_Ítem.NombreIngrediente" />
+                <input name="ingredientes[@contador].Gramos" id="ingredientes[@contador].Gramos"
+                       value="@l_Ítem.Gramos" />
+                <br />
+
+                ++@contador;
+            }
 
 
+        </div>
+
+        <div>
+            <input type="submit" />
+        </div>
+        @*<div>
+                <input type="button" value="Create" onclick="location.href='@Url.Action("Edit", "Cerveza",l_CervezaEditViewModel)'" />
+            </div>*@
     </div>
-
-    <div>
-        <input type="submit" />
-    </div>
-    @*<div>
-        <input type="button" value="Create" onclick="location.href='@Url.Action("Edit", "Cerveza",l_CervezaEditViewModel)'" />
-    </div>*@
-</div>
 
 }
 
 <script>
     //var num = 0;
-    
-    function AgregarIngrediente()
-    {
+
+    function AgregarIngrediente() {
         // console.log("hola");
 
         let num = document.getElementById("numIngredientes");
@@ -188,4 +205,4 @@
         DivIngredientes.appendChild(HiddenGramos);
 
     }
- </script>
+</script>

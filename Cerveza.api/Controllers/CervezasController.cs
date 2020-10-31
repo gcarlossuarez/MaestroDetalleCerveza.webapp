@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Cerveza.api.Models;
 using SQLitePCL;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Cerveza.api.Controllers
 {
@@ -18,6 +19,10 @@ namespace Cerveza.api.Controllers
 
         public CervezasController(MaestroDetalleContext context)
         {
+            if(context == null)
+            {
+                int i = 0;
+            }
             _context = context;
             //_context = new MaestroDetalleContext();
         }
@@ -92,7 +97,39 @@ namespace Cerveza.api.Controllers
                 //    }
                 //}
 
+                //Cerveza.api.Models.Cerveza l_CervezaAnterior = _context.Cerveza.Where(x => x.Id == cerveza.Id).FirstOrDefault();
+
+                //var l_ListOriginal = l_CervezaAnterior.Ingrediente.Where(x => x.IdCerveza == cerveza.Id);
+                //foreach (var l_IngredienteEstabaEnListadoOriginal in l_ListOriginal)
+                //{
+                //    //Ingrediente l_IngredienteParámetro = cerveza.Ingrediente.Where(x => x.Id == l_IngredienteEstabaEnListadoOriginal.Id).FirstOrDefault();
+
+                //    if (null == 
+                //        cerveza.Ingrediente.Where(x => (x.Id == l_IngredienteEstabaEnListadoOriginal.Id) && (x.Id != 0)).FirstOrDefault())
+                //    {
+                //        // Se borrarán los que ya no están, cuando se invoque a "SaveChangesAsync" 
+                //        l_CervezaAnterior.Ingrediente.Remove(l_IngredienteEstabaEnListadoOriginal);
+                //    }
+                //}
+
+                //_context.Update(cerveza);
+                //foreach(var l_Ingrediente in cerveza.Ingrediente)
+                //{
+                //    Cerveza.api.Models.Ingrediente l_IngredienteAnterior =
+                //        l_ListOriginal.Where(x => x.Id == l_Ingrediente.Id).FirstOrDefault();
+                //    if (null != l_IngredienteAnterior)
+                //    {
+                //        l_CervezaAnterior.Ingrediente
+                //        l_Ingrediente.Entry.State = EntityState.Modified;
+                //    }
+                //}
+                //l_CervezaAnterior = cerveza;
+                //_context.Update(l_CervezaAnterior);
+
+                //_context.Entry(cerveza).State = EntityState.Modified;
+
                 _context.Update(cerveza);
+
 
                 await _context.SaveChangesAsync();
 
